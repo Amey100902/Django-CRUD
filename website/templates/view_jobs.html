@@ -1,0 +1,310 @@
+
+
+{% extends 'base.html' %}
+{% if user.is_authenticated %}
+{% block content %}
+    <style>
+
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap");
+
+* {
+  
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+.search-bar {
+  min-height: 20vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+.search-job{
+    margin: 5px 5px;
+    border-style: solid;
+}
+.search-location{
+    margin: 5px 5px;
+    border-style:solid;
+}
+.input-box {
+    display: flex;
+    flex-direction: row;
+  position: relative;
+  height: 76px;
+  max-width: 900px;
+  width: 100%;
+  background: #eff3f8;
+  margin: 0 20px;
+  border-radius: 8px;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+}
+.input-box i,
+.input-box .button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.input-box i {
+  left: 20px;
+  font-size: 30px;
+  color: #707070;
+}
+.input-box input {
+  height: 100%;
+  width: 100%;
+  outline: none;
+  font-size: 18px;
+  font-weight: 400;
+  border: none;
+  padding: 0 155px 0 65px;
+  background-color: transparent;
+}
+.input-box .button {
+  right: 20px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 6px;
+  background-color: #4070f4;
+  cursor: pointer;
+}
+.input-box .button:active {
+  transform: translateY(-50%) scale(0.98);
+}
+.view-jobs{
+    display: flex;
+  flex-wrap:wrap;
+  justify-content: space-evenly;
+
+}
+
+/* Responsive */
+@media screen and (max-width: 500px) {
+  .input-box {
+    height: 66px;
+    margin: 0 8px;
+  }
+  .input-box i {
+    left: 12px;
+    font-size: 25px;
+  }
+  .input-box input {
+    padding: 0 112px 0 50px;
+  }
+  .input-box .button {
+    right: 12px;
+    font-size: 14px;
+    padding: 8px 18px;
+  }
+  
+  
+}
+</style>
+{% if response is none %}
+<form method='POST' action={% url 'morejob'  %} >
+  {% csrf_token %}
+<div class="search-bar">
+    <div class="input-box">
+        <div class="search-job">
+            <i class="uil uil-search"></i>
+            <input type="text" name="job_type" placeholder="Enter job title.." />
+        </div>
+        <div class="search-location">
+            <i class="uil uil-search"></i>
+            <input type="text" name="job_location" placeholder="Enter Location..." />
+        </div>
+        
+        <a ><button class="button">Search</button></a>
+      </div>
+</div>
+</form>
+
+{% else %}
+<form method='POST' action={% url 'morejob'  %} >
+  {% csrf_token %}
+<div class="search-bar">
+    <div class="input-box">
+        <div class="search-job">
+            <i class="uil uil-search"></i>
+            <input type="text" name="job_type" placeholder="Enter job title.." />
+        </div>
+        <div class="search-location">
+            <i class="uil uil-search"></i>
+            <input type="text" name="job_location" placeholder="Enter Location..." />
+        </div>
+        
+        <a ><button class="button">Search</button></a>
+      </div>
+</div>
+</form>
+
+<div class="view-jobs" style="margin: 2% 5%;">
+<div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.0.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.0.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.0.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.0.job_city}}{{" , "}}{{response.data.0.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.0.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.0.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+ 
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.1.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.1.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.1.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.1.job_city}}{{" , "}}{{response.data.1.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.1.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.1.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.2.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.2.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.2.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.2.job_city}}{{" , "}}{{response.data.2.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.2.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.2.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.3.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.3.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.3.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.3.job_city}}{{" , "}}{{response.data.3.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.3.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.3.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.4.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.4.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.4.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.4.job_city}}{{" , "}}{{response.data.4.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.4.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.4.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.5.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.5.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.5.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.5.job_city}}{{" , "}}{{response.data.5.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.5.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.5.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.6.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.6.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.6.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.6.job_city}}{{" , "}}{{response.data.6.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.1.job_employment_type}}</b></li>
+        
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.6.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.7.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.7.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.7.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.7.job_city}}{{" , "}}{{response.data.7.job_state}}</li> 
+      <li class="list-group-item">Employment Type: <b>{{response.data.7.job_employment_type}}</b></li>
+        
+    </ul>
+    <div class="card-body">
+      <a href={{response.data.7.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+  
+  <div class="card" style="width: 27%; margin: 15px 5px; height: 80vh;">  
+    <div class="card-body">
+      <h5 class="card-title">{{response.data.8.job_title}}</h5>
+      <strong> Job Description : </strong>
+      <p class="card-text"> {{response.data.8.job_description}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Company - <b>{{response.data.8.employer_name}}</b></li>
+      <li class="list-group-item">Location: {{response.data.8.job_city}}{{" , "}} {{response.data.8.job_state}}</li> 
+       <li class="list-group-item">Employment Type: <b>{{response.data.8.job_employment_type}}</b></li>
+        
+    <div class="card-body">
+      <a href={{response.data.8.job_apply_link}} class="btn btn-primary" target="_blank">Apply Now</a>
+      
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+</html>
+{% endblock content %}
+{% endif %}

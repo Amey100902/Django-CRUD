@@ -4,7 +4,47 @@ from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .models import Record
+import requests,json,copy
 
+
+def bojerom(request):
+   
+    if request.method=='POST':
+        job_type = request.POST.get('job_type')
+        job_location=request.POST.get('job_location')
+        url = "https://jsearch.p.rapidapi.com/search"
+        if not job_type or not job_location:
+            # Handle the case where one or both fields are empty
+            return render(request, 'view_jobs.html')
+        
+        else:
+            querystring = {"query":"{} in {}".format(job_type,job_location),"page":"1","num_pages":"1"}
+
+            headers = {
+                "X-RapidAPI-Key": "54dead1671mshdf45e261fbccb66p1c7870jsnc6860a8d0e72",
+                "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+            }
+
+            response = requests.get(url, headers=headers, params=querystring)
+            response=response.json()
+            modified_data = copy.deepcopy(response)
+
+            # Retrieve the job description from the JSON data
+            for i in range(0,10):
+                job_description = modified_data["data"][i]["job_description"]
+
+                # Split the description into words and take the first 20 words
+                words = job_description.split()[:35]
+                truncated_description = " ".join(words)
+
+                # Update the job description in the modified data
+                modified_data["data"][i]["job_description"] = truncated_description+"..."
+            
+            return render(request, 'view_jobs.html',{'response':modified_data})
+        
+
+    else:
+        return render(request, 'view_jobs.html', {'response': None})
 
 def home(request):
     #authenticate
@@ -26,8 +66,6 @@ def home(request):
         return render(request,'index.html',{'records':records})
 
 
-def about(request):
-    return render(request,'about.html',{})
 
 
 def logout_user(request):
@@ -86,7 +124,8 @@ def add_record(request):
             city=request.POST.get('city')
             state=request.POST.get('state')
             zipcode=request.POST.get('zipcode')
-            record = Record(first_name=name,email=email,phone_no=phone_no,address=address,state=state,city=city,zipcode=zipcode)
+            profile_pic = request.FILES.get('profile_pic') 
+            record = Record(first_name=name,email=email,phone_no=phone_no,address=address,state=state,city=city,zipcode=zipcode,profile_pic=profile_pic)
             record.save()
             messages.success(request,"Record added successfully")
             return redirect('home')
@@ -109,7 +148,7 @@ def update_record(request, pk):
             city = request.POST.get('city')
             state = request.POST.get('state')
             zipcode = request.POST.get('zipcode')
-
+            profile_pic = request.FILES.get('profile_pic') 
             # Update the record
             current_record.first_name = name
             current_record.email = email
@@ -118,6 +157,7 @@ def update_record(request, pk):
             current_record.city = city
             current_record.state = state
             current_record.zipcode = zipcode
+            current_record.profile_pic=profile_pic
 
             # Save the updated record
             current_record.save()
@@ -130,5 +170,3 @@ def update_record(request, pk):
         messages.success(request, "You Must Be Logged In...")
         return redirect('home')
         
-# def update_record(request,pk):
-#     return render(request,'update.html',{'id':pk})

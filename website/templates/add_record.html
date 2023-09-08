@@ -134,7 +134,7 @@ container {
     <section class="container">
       <header>Enter Employee Details</header>
       
-      <form action={% url 'add_record' %} method='POST' class="form"> 
+      <form action={% url 'add_record' %} method='POST' class="form" enctype="multipart/form-data"> 
         {% csrf_token %}
         <div class="input-box">
           <label>Full Name</label>
@@ -149,10 +149,7 @@ container {
             <label>Phone Number</label>
             <input type="text" placeholder="Enter phone number" name='phone_no' required />
           </div>
-          <div class="input-box">
-            <label>Birth Date</label>
-            <input type="date" placeholder="Enter birth date"  />
-          </div>
+          
         </div>
         
         <div class="input-box address">
@@ -167,7 +164,11 @@ container {
           <div class="column">
             <input type="number" placeholder="Enter postal code" name='zipcode' required />
           </div>
-          
+          <div>
+            <br>
+            <label for="formFileLg" class="form-label">Upload Your Profile Picture</label>
+            <input class="form-control form-control-lg" id="formFileLg" name='profile_pic' type="file">
+          </div>
         </div>
         <button>Add Record</button>
       </form>

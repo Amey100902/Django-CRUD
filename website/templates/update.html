@@ -134,7 +134,7 @@ container {
     <section class="container">
       <header>Registration Form</header>
      
-      <form action={% url 'update_record' current_record.id %} method='POST' class="form"> 
+      <form action={% url 'update_record' current_record.id %} method='POST' class="form" enctype="multipart/form-data"> 
         {% csrf_token %}
         <div class="input-box">
           <label>Full Name</label>
@@ -167,7 +167,12 @@ container {
           <div class="column">
             <input type="number" placeholder="Enter postal code" value='{{current_record.zipcode}}' name='zipcode' required />
           </div>
+          <div>
+            <label for="formFileLg" class="form-label">Large file input example</label>
+            <input class="form-control form-control-lg" id="formFileLg" name='profile_pic' type="file">
+          </div>
         </div>
+
         <button>Update</button>
       </form>
     </section>
