@@ -8,43 +8,46 @@ import requests,json,copy
 
 
 def bojerom(request):
-   
-    if request.method=='POST':
-        job_type = request.POST.get('job_type')
-        job_location=request.POST.get('job_location')
-        url = "https://jsearch.p.rapidapi.com/search"
-        if not job_type or not job_location:
-            # Handle the case where one or both fields are empty
-            return render(request, 'view_jobs.html')
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            job_type = request.POST.get('job_type')
+            job_location=request.POST.get('job_location')
+            url = "https://jsearch.p.rapidapi.com/search"
+            if not job_type or not job_location:
+                # Handle the case where one or both fields are empty
+                return render(request, 'view_jobs.html')
+            
+            else:
+                querystring = {"query":"{} in {}".format(job_type,job_location),"page":"1","num_pages":"1"}
+
+                headers = {
+                    "X-RapidAPI-Key": "54dead1671mshdf45e261fbccb66p1c7870jsnc6860a8d0e72",
+                    "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
+                }
+
+                response = requests.get(url, headers=headers, params=querystring)
+                response=response.json()
+                modified_data = copy.deepcopy(response)
+
+                # Retrieve the job description from the JSON data
+                for i in range(0,10):
+                    job_description = modified_data["data"][i]["job_description"]
+
+                    # Split the description into words and take the first 20 words
+                    words = job_description.split()[:25]
+                    truncated_description = " ".join(words)
+
+                    # Update the job description in the modified data
+                    modified_data["data"][i]["job_description"] = truncated_description+"..."
+                
+                return render(request, 'view_jobs.html',{'response':modified_data})
         
         else:
-            querystring = {"query":"{} in {}".format(job_type,job_location),"page":"1","num_pages":"1"}
-
-            headers = {
-                "X-RapidAPI-Key": "54dead1671mshdf45e261fbccb66p1c7870jsnc6860a8d0e72",
-                "X-RapidAPI-Host": "jsearch.p.rapidapi.com"
-            }
-
-            response = requests.get(url, headers=headers, params=querystring)
-            response=response.json()
-            modified_data = copy.deepcopy(response)
-
-            # Retrieve the job description from the JSON data
-            for i in range(0,10):
-                job_description = modified_data["data"][i]["job_description"]
-
-                # Split the description into words and take the first 20 words
-                words = job_description.split()[:25]
-                truncated_description = " ".join(words)
-
-                # Update the job description in the modified data
-                modified_data["data"][i]["job_description"] = truncated_description+"..."
-            
-            return render(request, 'view_jobs.html',{'response':modified_data})
+            return render(request, 'view_jobs.html', {'response': None})
         
-
     else:
-        return render(request, 'view_jobs.html', {'response': None})
+        messages.success(request,"You must be Logged in to search jobs..")
+        return redirect('home')
 
 def home(request):
     #authenticate
