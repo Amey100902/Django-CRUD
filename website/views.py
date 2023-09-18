@@ -34,7 +34,7 @@ def bojerom(request):
                 job_description = modified_data["data"][i]["job_description"]
 
                 # Split the description into words and take the first 20 words
-                words = job_description.split()[:35]
+                words = job_description.split()[:25]
                 truncated_description = " ".join(words)
 
                 # Update the job description in the modified data
