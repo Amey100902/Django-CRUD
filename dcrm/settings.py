@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#rnw#+ru0uuqeg1^rm)=fd(+v7^-j$=k0)*-wu#nier9)yiru#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -71,6 +71,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dcrm.wsgi.application'
 
+# 'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'elderco',
+#         'USER': 'root',
+#         'PASSWORD': '1234',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

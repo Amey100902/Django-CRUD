@@ -160,7 +160,7 @@ def update_record(request, pk):
             current_record.city = city
             current_record.state = state
             current_record.zipcode = zipcode
-            current_record.profile_pic=profile_pic
+            current_record.profile_pic = profile_pic
 
             # Save the updated record
             current_record.save()
