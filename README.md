@@ -1,3 +1,8 @@
 # Django-CRUD
 
-This Employee Management CRUD application, built with Django, HTML, and CSS, simplifies workforce administration. It features secure user authentication and empowers administrators to effortlessly manage employee records. With an intuitive interface for adding, viewing, updating, and deleting records, day-to-day employee management becomes easy. The built-in CSRF protection ensures data security. 
+ • CreatedasecureCRUD-basedEmployeeManagementappusingDjango,HTML,andCSS,whichallowstoeasilyadd,
+   view, update, and delete employeerecords
+ • Implementedauser-friendly job search feature, allowing to search for specific job roles and locations. Utilized the
+  ’Jsearch’ REST API to fetch real-time job listings in JSON format.
+ • Utilized postgreSQL for structured data and firebase cloud storage for storing and serving media files.
+ • Deployedonvercelplatformforseamlessuserexperience
