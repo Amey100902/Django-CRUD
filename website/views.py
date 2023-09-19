@@ -5,6 +5,29 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from .models import Record
 import requests,json,copy
+import pyrebase,os
+import firebase_admin
+
+from firebase_admin import credentials
+
+# cred = credentials.Certificate("C:/Users/ameya/OneDrive/Desktop/CRUD/dcrm/website/serviceAccount.json")
+# firebase_admin.initialize_app(cred)
+# firebase setup 
+
+firebaseConfig  = {
+  "apiKey": "AIzaSyCzcx8F7Vf26Lj1WTCtCwjrWPc-iWN2-Rc",
+  "authDomain": "crud-59e02.firebaseapp.com",
+  "projectId": "crud-59e02",
+  "databaseURL" : "https://crud-59e02-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  "storageBucket": "crud-59e02.appspot.com",
+  "messagingSenderId": "230843205578",
+  "appId": "1:230843205578:web:771c48609c29d02d663133"
+  
+}
+
+firebase=pyrebase.initialize_app(firebaseConfig)
+storage = firebase.storage()
+storage.child("profile_photo.jpg").put("media/images/profile_photo.jpg")
 
 
 def bojerom(request):
@@ -128,7 +151,13 @@ def add_record(request):
             state=request.POST.get('state')
             zipcode=request.POST.get('zipcode')
             profile_pic = request.FILES.get('profile_pic') 
-            record = Record(first_name=name,email=email,phone_no=phone_no,address=address,state=state,city=city,zipcode=zipcode,profile_pic=profile_pic)
+            storage.child(name).put(profile_pic)
+            # file_name = f"media/images/{os.path.basename(profile_pic.name)}"
+            # print("filename= "+file_name)
+            download_url = storage.child(name).get_url(None)
+            # print("url= "+download_url)
+            profile_pic=download_url
+            record = Record(first_name=name,email=email,phone_no=phone_no,address=address,state=state,city=city,zipcode=zipcode,profile_pic=download_url)
             record.save()
             messages.success(request,"Record added successfully")
             return redirect('home')
@@ -151,7 +180,14 @@ def update_record(request, pk):
             city = request.POST.get('city')
             state = request.POST.get('state')
             zipcode = request.POST.get('zipcode')
-            profile_pic = request.FILES.get('profile_pic') 
+            profile_pic = request.FILES.get('profile_pic')
+            # print("profile_pic= " , profile_pic)
+            storage.child(name).put(profile_pic)
+            # file_name = f"media/images/{os.path.basename(profile_pic.name)}"
+            # print("filename= "+file_name)
+            download_url = storage.child(name).get_url(None)
+            # print("url= "+download_url)
+            profile_pic=download_url
             # Update the record
             current_record.first_name = name
             current_record.email = email

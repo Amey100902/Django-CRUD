@@ -7,7 +7,8 @@
 <div style="margin-left: 8%; margin-top: 3%; width: 60%; height: 50%;">
 	<div class="card mb-3" style="width: 30rem; background-color: #bfbfbf;">
 		{% if customer_record.profile_pic %}
-			<img class="card-img-top" style=" object-fit:cover ; height:20rem;" src="{{customer_record.profile_pic.url}}" alt="{{customer_record.first_name}}">
+		
+			<img class="card-img-top" style=" object-fit:cover ; height:20rem;" src="{{customer_record.profile_pic}}" alt="{{customer_record.first_name}}">
 		{% else %}
 			<img src={% static 'default.jpg' %} alt="Default Profile Picture">
 			
